@@ -42,6 +42,20 @@ fun AppNavigation(appContainer: AppContainer) {
                     navController.navigate("login") {
                         popUpTo("conversacion") { inclusive = true }
                     }
+                },
+                onIrAVinculacion = {
+                    navController.navigate("vinculacion")
+                }
+            )
+        }
+        composable("vinculacion") {
+            val viewModel: com.juni.mensajepush.presentacion.vinculacion.VinculacionViewModel = viewModel(factory = viewModelFactory)
+            com.juni.mensajepush.presentacion.vinculacion.VinculacionPantalla(
+                viewModel = viewModel,
+                onVinculacionExitosa = {
+                    navController.navigate("conversacion") {
+                        popUpTo("conversacion") { inclusive = true }
+                    }
                 }
             )
         }

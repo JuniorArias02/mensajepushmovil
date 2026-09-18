@@ -2,7 +2,7 @@ package com.juni.mensajepush.datos.repositorios
 
 import android.content.Context
 import com.juni.mensajepush.datos.remoto.api.ApiMensajeria
-import com.juni.mensajepush.datos.remoto.api.LoginRequest
+import com.juni.mensajepush.datos.remoto.api.PeticionIniciarSesion
 import com.juni.mensajepush.dominio.modelos.Usuario
 import com.juni.mensajepush.dominio.repositorios.RepositorioAutenticacion
 import kotlinx.coroutines.Dispatchers
@@ -18,19 +18,23 @@ class RepositorioAutenticacionImpl(
     override suspend fun iniciarSesion(correo: String, contrasena: String): Result<Usuario> {
         return withContext(Dispatchers.IO) {
             try {
-                val respuesta = api.iniciarSesion(LoginRequest(correo, contrasena))
+                val respuesta = api.iniciarSesion(PeticionIniciarSesion(correo, contrasena))
                 if (respuesta.isSuccessful && respuesta.body() != null) {
-                    val dto = respuesta.body()!!
-                    // Guardar token
-                    dto.token?.let { token ->
-                        prefs.edit().putString("auth_token", token).apply()
-                    }
-                    // Guardar usuario actual
-                    prefs.edit().putString("user_id", dto.id).apply()
-                    prefs.edit().putString("user_name", dto.name).apply()
-                    prefs.edit().putString("user_email", dto.email).apply()
+                    val cuerpo = respuesta.body()!!
+                    if (cuerpo.exito && cuerpo.datos != null) {
+                        val dto = cuerpo.datos
+                        // Guardar token
+                        prefs.edit().putString("auth_token", dto.token).apply()
+                        
+                        // Guardar usuario actual
+                        prefs.edit().putString("user_id", dto.usuario.id).apply()
+                        prefs.edit().putString("user_name", dto.usuario.nombre).apply()
+                        prefs.edit().putString("user_email", dto.usuario.correo).apply()
 
-                    Result.success(dto.aDominio())
+                        Result.success(dto.usuario.aDominio())
+                    } else {
+                        Result.failure(Exception(cuerpo.mensaje))
+                    }
                 } else {
                     Result.failure(Exception("Error al iniciar sesión: ${respuesta.code()}"))
                 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "313843332278",
+    "project_id": "mensajepushapp",
+    "storage_bucket": "mensajepushapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313843332278:android:94c0efff5b46cdcffaa217",
+        "android_client_info": {
+          "package_name": "com.juni.mensajepush"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFjkquI0eHhjlAm3M0kXWd8PNfvWcoTH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

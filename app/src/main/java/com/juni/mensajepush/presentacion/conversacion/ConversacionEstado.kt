@@ -7,4 +7,5 @@ sealed class ConversacionEstado {
     data class Exito(val mensajes: List<Mensaje>) : ConversacionEstado()
     data class Error(val mensaje: String) : ConversacionEstado()
     object Vacio : ConversacionEstado()
+    object SinVinculacion : ConversacionEstado()
 }

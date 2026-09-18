@@ -1,31 +1,29 @@
-package com.juni.mensajepush.presentacion.autenticacion
+package com.juni.mensajepush.presentacion.vinculacion
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AutenticacionPantalla(
-    viewModel: AutenticacionViewModel,
-    onAutenticacionExitosa: () -> Unit
+fun VinculacionPantalla(
+    viewModel: VinculacionViewModel,
+    onVinculacionExitosa: () -> Unit
 ) {
     val estado by viewModel.estado.collectAsState()
     var correo by remember { mutableStateOf("") }
-    var contrasena by remember { mutableStateOf("") }
 
     LaunchedEffect(estado) {
-        if (estado is AutenticacionEstado.Exito) {
-            onAutenticacionExitosa()
+        if (estado is VinculacionEstado.Exito) {
+            onVinculacionExitosa()
         }
     }
 
@@ -41,75 +39,58 @@ fun AutenticacionPantalla(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Bienvenido",
-                fontSize = 32.sp,
+                text = "Conecta con alguien",
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
+                textAlign = TextAlign.Center
             )
             
             Text(
-                text = "Inicia sesión para continuar",
+                text = "Ingresa el correo electrónico de la persona con la que quieres iniciar un chat privado.",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 32.dp)
+                modifier = Modifier.padding(bottom = 32.dp),
+                textAlign = TextAlign.Center
             )
 
             OutlinedTextField(
                 value = correo,
                 onValueChange = { correo = it },
-                label = { Text("Correo electrónico") },
+                label = { Text("Correo de tu contacto") },
                 leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
-
-            var contrasenaVisible by remember { mutableStateOf(false) }
-
-            OutlinedTextField(
-                value = contrasena,
-                onValueChange = { contrasena = it },
-                label = { Text("Contraseña") },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
-                trailingIcon = {
-                    TextButton(onClick = { contrasenaVisible = !contrasenaVisible }) {
-                        Text(if (contrasenaVisible) "Ocultar" else "Ver")
-                    }
-                },
-                visualTransformation = if (contrasenaVisible) androidx.compose.ui.text.input.VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                singleLine = true
-            )
-
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (estado is AutenticacionEstado.Error) {
+            if (estado is VinculacionEstado.Error) {
                 Text(
-                    text = (estado as AutenticacionEstado.Error).mensaje,
+                    text = (estado as VinculacionEstado.Error).mensaje,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    textAlign = TextAlign.Center
                 )
             }
 
             Button(
-                onClick = { viewModel.iniciarSesion(correo, contrasena) },
+                onClick = { viewModel.vincularPorCorreo(correo) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                enabled = estado !is AutenticacionEstado.Cargando
+                enabled = estado !is VinculacionEstado.Cargando
             ) {
-                if (estado is AutenticacionEstado.Cargando) {
+                if (estado is VinculacionEstado.Cargando) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text("Iniciar Sesión", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Vincular y Chatear", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }

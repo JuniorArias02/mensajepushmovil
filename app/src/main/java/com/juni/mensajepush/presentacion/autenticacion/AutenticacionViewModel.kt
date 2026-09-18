@@ -8,8 +8,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.tasks.await
+
 class AutenticacionViewModel(
-    private val iniciarSesionUseCase: IniciarSesionUseCase
+    private val iniciarSesionUseCase: IniciarSesionUseCase,
+    private val registrarDispositivoUseCase: com.juni.mensajepush.dominio.casosdeuso.RegistrarDispositivoUseCase
 ) : ViewModel() {
 
     private val _estado = MutableStateFlow<AutenticacionEstado>(AutenticacionEstado.Inicial)
@@ -20,6 +24,12 @@ class AutenticacionViewModel(
             _estado.value = AutenticacionEstado.Cargando
             val resultado = iniciarSesionUseCase(correo, contrasena)
             if (resultado.isSuccess) {
+                try {
+                    val token = FirebaseMessaging.getInstance().token.await()
+                    registrarDispositivoUseCase(token, android.os.Build.MODEL ?: "Android")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 _estado.value = AutenticacionEstado.Exito
             } else {
                 val error = resultado.exceptionOrNull()?.message ?: "Error desconocido"

@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.juni.mensajepush.presentacion.AppNavigation
 import com.juni.mensajepush.utilidades.AppContainer
+import com.juni.mensajepush.ui.theme.MensajePushTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         val appContainer = AppContainer(this)
         
         setContent {
-            MaterialTheme {
+            MensajePushTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

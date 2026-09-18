@@ -17,8 +17,8 @@ import okhttp3.Interceptor
 
 class AppContainer(private val context: Context) {
 
-    // URL de Laravel. (Para el emulador de Android Studio usar 10.0.2.2 en lugar de localhost)
-    private val BASE_URL = "http://10.0.2.2:8000/api/" 
+    // URL de Laravel apuntando a la IP de esta computadora para probar en un celular físico
+    private val BASE_URL = "https://nexacorepruebas.clinicalhouse.co/public/api/" 
 
     private val authInterceptor = Interceptor { chain ->
         val requestBuilder = chain.request().newBuilder()
@@ -66,5 +66,21 @@ class AppContainer(private val context: Context) {
     
     val registrarDispositivoUseCase: RegistrarDispositivoUseCase by lazy {
         RegistrarDispositivoUseCase(api)
+    }
+
+    val vincularUsuarioUseCase: com.juni.mensajepush.dominio.casosdeuso.VincularUsuarioUseCase by lazy {
+        com.juni.mensajepush.dominio.casosdeuso.VincularUsuarioUseCase(api)
+    }
+
+    val marcarLeidoUseCase: com.juni.mensajepush.dominio.casosdeuso.MarcarLeidoUseCase by lazy {
+        com.juni.mensajepush.dominio.casosdeuso.MarcarLeidoUseCase(repositorioMensajes)
+    }
+
+    val editarMensajeUseCase: com.juni.mensajepush.dominio.casosdeuso.EditarMensajeUseCase by lazy {
+        com.juni.mensajepush.dominio.casosdeuso.EditarMensajeUseCase(repositorioMensajes)
+    }
+
+    val eliminarMensajeUseCase: com.juni.mensajepush.dominio.casosdeuso.EliminarMensajeUseCase by lazy {
+        com.juni.mensajepush.dominio.casosdeuso.EliminarMensajeUseCase(repositorioMensajes)
     }
 }
